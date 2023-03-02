@@ -14,7 +14,7 @@
     {
       "matches": ["<all_urls>"],
       "css": ["scripts/my-styles.css"],
-      "js": ["scripts/content-script.js", "scripts/all.js"]
+      "js": ["scripts/content-script.js", "scripts/fontawesome.js"]
     }
   ],
   "background": {
@@ -25,5 +25,14 @@
       "matches": ["<all_urls>"],
       "resources": ["images/key.png"]
     }
-  ]
+  ],
+  "permissions": ["storage", "identity"],
+  "oauth2": {
+    "client_id": "662619840732-4hfgmjvat5fmtghdbej1luvb2qbtt0cf.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/userinfo.email"
+    ]
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqFv2yUu1Ct9JTDaLmDhU2DXN2QE6dpkTJ57aQCfYWK9PzaNNp3qb51nWgn+nuYfteolCY+LzgLc/l9J29jPFakmf8qRKjYn10n3vvYO6tfp6LdN0M3igXVllwlyuJ6/hNHmBTjc0IQ65XBAMjmOPgIlk7MQ40JgxrWSM99H41qbHaHdv44HVMbYS+mJiZvWzyc189Dv2QZaaFGH/bK/Vtn/KoP5DVmB/g6RBilnJraHbTY+nV6yZ8tkaQ0XDatsvcpqhIMqZWeKSxkAYYgnD8ONCjQ5JwP9woZMsSqKqNoBFseDUEG5Yb6T37md2p+orrhveS/NlIeopX6pGZ2VflQIDAQAB"
 }
