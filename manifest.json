@@ -13,8 +13,12 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "css": ["scripts/my-styles.css"],
-      "js": ["scripts/content-script.js", "scripts/fontawesome.js"]
+      "css": ["scripts/my-styles.css", "scripts/float-window-answers.css"],
+      "js": [
+        "scripts/jquery-3.6.0.js",
+        "scripts/fontawesome.js",
+        "scripts/content-script.js"
+      ]
     }
   ],
   "background": {

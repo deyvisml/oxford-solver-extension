@@ -59,21 +59,184 @@ const display_key_btn = async () => {
     const key_btn = document.createElement("div");
     key_btn.classList.add("btn-key-container");
     key_btn.setAttribute("title", "Mostrar respuestas");
-    key_btn.innerHTML = `<img src="${chrome.runtime.getURL(
+    key_btn.innerHTML = `<img class="img-btn-key" src="${chrome.runtime.getURL(
       "images/key.png"
-    )}" alt="">`;
+    )}" alt="">
+    <div style="display:none" class="load"><span></span></div>`;
 
     const interface_element = document.querySelector(".interface");
     interface_element.insertAdjacentElement("afterbegin", key_btn); // issue: but it's working xd it should be beforebegin
 
     const id_activity = response.id_activity;
-    console.log("id_activity", id_activity);
 
     // add listener
     key_btn.addEventListener("click", () => {
+      document.querySelector(".img-btn-key").style.display = "none";
+      document.querySelector(".load").style.removeProperty("display");
       handler_key_btn(id_activity);
     });
   }
+};
+
+const display_float_window_answers = (questions_answers) => {
+  handler_close_float_window_answers();
+
+  const display_format = questions_answers.display_format;
+  const display_width = questions_answers.display_width;
+  const questions = questions_answers.questions;
+
+  console.log("questions_answers:", questions_answers);
+
+  const float_window_answer = document.createElement("div");
+  // Agregar la clase para el tamaño de la ventana
+  float_window_answer.classList.add("float-window-answers", display_width);
+
+  // Agregar los contenidos de las pregutnas y respuestas segun el tipo de formato
+
+  const head_float_window_element = document.createElement("div");
+  head_float_window_element.classList.add("head-float-window");
+  head_float_window_element.innerHTML = `<p class="title-head">Answer key</p>
+                                        <div class="close-float-window-answers">
+                                          <i class="fa-solid fa-xmark"></i>
+                                        </div>`;
+
+  const body_float_window_element = create_body_float_window(
+    questions,
+    display_format
+  );
+
+  float_window_answer.insertAdjacentElement(
+    "beforeend",
+    head_float_window_element
+  );
+  float_window_answer.insertAdjacentElement(
+    "beforeend",
+    body_float_window_element
+  );
+
+  body_element.insertAdjacentElement("afterbegin", float_window_answer);
+  //alert(id_activity);
+  make_float_window_answer_draggable();
+
+  const close_float_window_answers_btn = document.querySelector(
+    ".close-float-window-answers"
+  );
+
+  close_float_window_answers_btn.addEventListener("click", () => {
+    handler_close_float_window_answers();
+  });
+};
+
+const create_body_float_window = (questions, format_type) => {
+  const body_float_window_element = document.createElement("div");
+  body_float_window_element.classList.add("body-float-window", format_type);
+
+  switch (format_type) {
+    case "format-1":
+      // 1 question (It's not required to for the questions, because only exits one
+      for (const question of questions) {
+        for (const answer of question.answers) {
+          const answer_element = document.createElement("div");
+          answer_element.classList.add("answer");
+
+          answer_element.innerHTML = `<div class="num">${answer.ordinal_number}</div>
+                                      <div class="content-answer">${answer.answer}</div>`;
+
+          body_float_window_element.insertAdjacentElement(
+            "beforeend",
+            answer_element
+          );
+        }
+      }
+      break;
+
+    case "format-2":
+      // 1 question
+      for (const question of questions) {
+        for (const answer of question.answers) {
+          const answer_element = document.createElement("div");
+          answer_element.classList.add("answer");
+
+          answer_element.innerHTML = `<div class="content-answer">${answer.answer}</div>`;
+
+          body_float_window_element.insertAdjacentElement(
+            "beforeend",
+            answer_element
+          );
+        }
+      }
+      break;
+
+    case "format-3":
+      // n questions
+      for (const question of questions) {
+        const question_element = document.createElement("div");
+        question_element.classList.add("question");
+        question_element.innerHTML = `<div class="content-question">${question.question}</div>`;
+
+        const answers_element = document.createElement("div");
+        answers_element.classList.add("answers");
+        for (const answer of question.answers) {
+          const answer_element = document.createElement("div");
+          answer_element.classList.add("answer");
+
+          answer_element.innerHTML = `<div class="content-answer">${answer.answer}</div>`;
+
+          answers_element.insertAdjacentElement("beforeend", answer_element);
+        }
+
+        question_element.insertAdjacentElement("beforeend", answers_element);
+        body_float_window_element.insertAdjacentElement(
+          "beforeend",
+          question_element
+        );
+      }
+      break;
+
+    case "format-4":
+      // n questions
+      for (const question of questions) {
+        for (const answer of question.answers) {
+          const answer_element = document.createElement("div");
+          answer_element.classList.add("answer");
+
+          answer_element.innerHTML = `<div class="question">${question.question}</div>
+                                      <div class="content-answer">${answer.answer}</div>`;
+
+          body_float_window_element.insertAdjacentElement(
+            "beforeend",
+            answer_element
+          );
+        }
+      }
+      break;
+
+    case "format-5":
+      // n questions
+      for (const question of questions) {
+        for (const answer of question.answers) {
+          const answer_element = document.createElement("div");
+          answer_element.classList.add("answer");
+
+          answer_element.innerHTML = `<div class="question">
+                                        <img src="${question.question}" alt="" />
+                                      </div>
+                                      <div class="content-answer">${answer.answer}</div>`;
+
+          body_float_window_element.insertAdjacentElement(
+            "beforeend",
+            answer_element
+          );
+        }
+      }
+      break;
+
+    default:
+      console.log("invalid format type");
+      break;
+  }
+
+  return body_float_window_element;
 };
 
 const verify_activity = async () => {
@@ -135,7 +298,6 @@ const handler_key_btn = (id_activity) => {
       id_activity: id_activity,
     },
     function (response) {
-      console.log(":::: SIUU", response);
       if ("token_alive" in response && response.token_alive === false) {
         // verificar si el usuario esta logeado (token)
         alert("Por favor, primero debe iniciar sesión.");
@@ -147,12 +309,36 @@ const handler_key_btn = (id_activity) => {
         alert("Usted no cuenta con un código vigente.\n");
       } else {
         // si todo esta ok mostrar ventana flotante
-        // TODO: WORKING..
-
-        alert(id_activity);
+        display_float_window_answers(response);
       }
+
+      // eliminar el loader
+      document.querySelector(".img-btn-key").style.removeProperty("display");
+      document.querySelector(".load").style.display = "none";
     }
   );
+};
+
+const make_float_window_answer_draggable = () => {
+  $("body")
+    .on("mousedown", ".head-float-window", function () {
+      $(".float-window-answers")
+        .addClass("draggable")
+        .parents()
+        .on("mousemove", function (e) {
+          $(".draggable")
+            .offset({
+              top: e.pageY - $(".head-float-window").outerHeight() / 2,
+              left: e.pageX - $(".head-float-window").outerWidth() / 2,
+            })
+            .on("mouseup", function () {
+              $(".float-window-answers").removeClass("draggable");
+            });
+        });
+    })
+    .on("mouseup", function () {
+      $(".draggable").removeClass("draggable");
+    });
 };
 
 const handler_display_enter_code = () => {
@@ -347,8 +533,14 @@ const handler_close_float_window = () => {
 
   float_window_element.remove();
   cover_window_element.remove();
+};
 
-  body_element.classList.remove("stop-scrolling");
+const handler_close_float_window_answers = () => {
+  const float_window_answers_element = document.querySelector(
+    ".float-window-answers"
+  );
+
+  float_window_answers_element?.remove();
 };
 
 /* ====================================================================== */

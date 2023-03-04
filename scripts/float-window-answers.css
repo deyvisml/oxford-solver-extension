@@ -1,0 +1,164 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;1,100;1,300;1,400;1,500&display=swap");
+
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+.float-window-answers {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10070;
+  font-family: "Roboto", sans-serif;
+
+  border-radius: 7px;
+  border: 1px solid black;
+  overflow: hidden;
+  box-shadow: 3px 3px 4px 1px #222222;
+  user-select: none !important;
+
+  width: 250px; /*small: 200, medium: 350: large: 500*/
+}
+
+.small {
+  width: 200px !important;
+}
+
+.medium {
+  width: 350px !important;
+}
+
+.large {
+  width: 500px !important;
+}
+
+.float-window-answers .head-float-window {
+  height: 20px;
+  padding: 2px 7px;
+  border-bottom: 1px solid gainsboro;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #5e8b7e;
+  cursor: move;
+  color: white;
+}
+
+.float-window-answers .head-float-window .title-head {
+  font-weight: bold;
+  letter-spacing: 0.2px;
+  font-size: 13px;
+  user-select: none !important;
+}
+
+.float-window-answers .head-float-window .close-float-window-answers {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  border: 1px solid transparent;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.float-window-answers .head-float-window .close-float-window-answers:hover {
+  border: 1px solid #e9e9e9;
+  border-radius: 3px;
+}
+
+.float-window-answers .body-float-window {
+  width: 100%;
+  padding: 1px;
+
+  min-height: 50px;
+  max-height: 500px;
+  overflow-y: auto;
+
+  font-size: 14px !important;
+  line-height: normal !important;
+  letter-spacing: 0.1px !important;
+  user-select: none !important;
+
+  background-color: white;
+}
+
+/* Tipo 1 y 2 */
+.format-1 .answer,
+.format-2 .answer,
+.format-4 .answer {
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+
+  margin: 10px;
+}
+
+.format-1 .answer .num {
+  flex-shrink: 0; /* para poder establecer el tamaño usando width https://stackoverflow.com/questions/21406397/width-ignored-on-flexbox-items */
+  width: 25px !important;
+}
+
+.format-1 .answer .content-answer,
+.format-2 .answer .content-answer,
+.format-3 .question .answers,
+.format-4 .answer .content-answer,
+.format-5 .answer .content-answer {
+  color: #2f5d62;
+  font-weight: bold;
+}
+/* Tipo 3 */
+.format-3 .question {
+  margin: 10px;
+}
+
+.format-3 .question .content-question {
+  color: black !important;
+  font-size: 15px !important;
+  font-weight: bolder !important;
+}
+
+.format-3 .question .answers .content-answer {
+  margin: 5px 0px;
+}
+
+/* format-4 */
+.format-4 .answer .question {
+  flex-shrink: 0;
+  width: 50%;
+  margin-right: 10px;
+  color: black !important;
+}
+
+/* format-5 */
+.format-5 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: flex-start;
+}
+
+.format-5 .answer {
+  flex-shrink: 0;
+  padding: 0px !important;
+  width: 105px;
+  margin: 8px 0px !important;
+}
+
+.format-5 .question {
+  border: 5px;
+  overflow: hidden;
+}
+
+.format-5 .question img {
+  width: 100%;
+  height: 85px;
+}
+
+.format-5 .answer .content-answer {
+  margin-top: 2px;
+  text-align: center;
+}
