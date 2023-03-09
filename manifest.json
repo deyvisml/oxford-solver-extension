@@ -27,7 +27,7 @@
   "web_accessible_resources": [
     {
       "matches": ["<all_urls>"],
-      "resources": ["images/key.png"]
+      "resources": ["images/*"]
     }
   ],
   "permissions": ["storage", "identity"],

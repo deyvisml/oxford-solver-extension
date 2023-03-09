@@ -9,6 +9,7 @@ const display_login_interface = () => {
 
   interface_element.innerHTML = `<ul class="options-container only-login">
                                   <li title="Login" class="login-btn"><i class="fa-brands fa-google"></i></li>
+                                  <div style="display:none" class="load loader-login-btn"><span></span></div>
                                 </ul>`;
 
   body_element.insertAdjacentElement("afterbegin", interface_element);
@@ -16,6 +17,8 @@ const display_login_interface = () => {
   const login_btn = document.querySelector(".login-btn");
 
   login_btn.addEventListener("click", () => {
+    document.querySelector(".login-btn").style.display = "none";
+    document.querySelector(".loader-login-btn").style.removeProperty("display");
     handler_login_btn();
   });
 };
@@ -62,7 +65,7 @@ const display_key_btn = async () => {
     key_btn.innerHTML = `<img class="img-btn-key" src="${chrome.runtime.getURL(
       "images/key.png"
     )}" alt="">
-    <div style="display:none" class="load"><span></span></div>`;
+    <div style="display:none" class="load loader-key-btn"><span></span></div>`;
 
     const interface_element = document.querySelector(".interface");
     interface_element.insertAdjacentElement("afterbegin", key_btn); // issue: but it's working xd it should be beforebegin
@@ -72,7 +75,7 @@ const display_key_btn = async () => {
     // add listener
     key_btn.addEventListener("click", () => {
       document.querySelector(".img-btn-key").style.display = "none";
-      document.querySelector(".load").style.removeProperty("display");
+      document.querySelector(".loader-key-btn").style.removeProperty("display");
       handler_key_btn(id_activity);
     });
   }
@@ -219,9 +222,34 @@ const create_body_float_window = (questions, format_type) => {
           answer_element.classList.add("answer");
 
           answer_element.innerHTML = `<div class="question">
-                                        <img src="${question.question}" alt="" />
+                                        <img src="${chrome.runtime.getURL(
+                                          "images/question_answer_images/".concat(
+                                            question.question
+                                          )
+                                        )}"/>
                                       </div>
-                                      <div class="content-answer">${answer.answer}</div>`;
+                                      <div class="content-answer">${
+                                        answer.answer
+                                      }</div>`;
+
+          body_float_window_element.insertAdjacentElement(
+            "beforeend",
+            answer_element
+          );
+        }
+      }
+      break;
+
+    case "format-6":
+      // 1 questions
+      for (const question of questions) {
+        for (const answer of question.answers) {
+          const answer_element = document.createElement("div");
+          answer_element.classList.add("answer");
+
+          answer_element.innerHTML = `<img class="content-answer" src="${chrome.runtime.getURL(
+            "images/question_answer_images/".concat(question.question)
+          )}"/>`;
 
           body_float_window_element.insertAdjacentElement(
             "beforeend",
@@ -241,16 +269,29 @@ const create_body_float_window = (questions, format_type) => {
 
 const verify_activity = async () => {
   // TODO: Estas rutas xpath son muy IMPORTANTES ya que definen con exactitud de que activity se trata. (puede que varien en las distintas actitivy ...)
+
+  /*const path_program =
+    "/html/body/header/nav/d2l-navigation/d2l-navigation-main-header/div[1]/div[2]/div/a";
   const path_topic =
     "/html/body/div[3]/div[2]/div[1]/div/div[1]/div/div/d2l-breadcrumbs/d2l-breadcrumb[3]";
   const path_activity_type =
     "/html/body/div[3]/div[2]/div[1]/div/div[1]/div/div/d2l-breadcrumbs/d2l-breadcrumb-current-page";
 
+  const program_element = await checkElement(path_program);
   const topic_element = await checkElement(path_topic);
   const activity_type_element = await checkElement(path_activity_type);
 
+  const program_name = program_element.getAttribute("title");
   const topic_name = topic_element.getAttribute("text");
-  const activity_type_name = activity_type_element.getAttribute("text");
+  const activity_type_name = activity_type_element.getAttribute("text");*/
+
+  const program_element = await checkElement('//*[@id="program"]');
+  const topic_element = await checkElement('//*[@id="topic"]');
+  const activity_type_element = await checkElement('//*[@id="activity-type"]');
+
+  const program_name = program_element.value;
+  const topic_name = topic_element.value;
+  const activity_type_name = activity_type_element.value;
 
   // verificar en el backend
   // https://stackoverflow.com/questions/52087734/make-promise-wait-for-a-chrome-runtime-sendmessage
@@ -258,6 +299,7 @@ const verify_activity = async () => {
     chrome.runtime.sendMessage(
       {
         action: "verify-activity",
+        program_name: program_name,
         topic_name: topic_name,
         activity_type_name: activity_type_name,
       },
@@ -436,6 +478,9 @@ const handler_login_btn = () => {
     if (response.logged) {
       main();
     }
+    // eliminar el loader de login
+    document.querySelector(".login-btn").style.removeProperty("display");
+    document.querySelector(".loader-login-btn").style.display = "none";
   });
 };
 

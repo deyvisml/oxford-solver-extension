@@ -122,6 +122,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     (async () => {
       // https://stackoverflow.com/questions/53024819/chrome-extension-sendresponse-not-waiting-for-async-function/53024910#53024910
       const result = await verify_activity(
+        message.program_name,
         message.topic_name,
         message.activity_type_name
       );
@@ -173,8 +174,12 @@ const get_answers = async (id_activity) => {
   return data;
 };
 
-const verify_activity = async (topic_name, activity_type_name) => {
-  console.log("names:", topic_name, activity_type_name);
+const verify_activity = async (
+  program_name,
+  topic_name,
+  activity_type_name
+) => {
+  console.log("names:", program_name, topic_name, activity_type_name);
 
   const response = await fetch("http://127.0.0.1:8000/api/verify-activity/", {
     method: "post",
@@ -183,6 +188,7 @@ const verify_activity = async (topic_name, activity_type_name) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      program_name: program_name,
       topic_name: topic_name,
       activity_type_name: activity_type_name,
     }),
