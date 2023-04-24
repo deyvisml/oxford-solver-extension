@@ -156,7 +156,7 @@ const get_answers = async (id_activity) => {
   const result = await readLocalStorage("token");
   const token = result.token;
 
-  const response = await fetch("https://oxfordsolver.codigosoxford/api/solve", {
+  const response = await fetch("https://oxfordsolver.deyvisml.com/api/solve", {
     method: "post",
     headers: {
       Accept: "application/json",
@@ -185,7 +185,7 @@ const verify_activity = async (
   console.log("names:", program_name, topic_name, activity_type_name);
 
   const response = await fetch(
-    "https://oxfordsolver.codigosoxford/api/verify-activity",
+    "https://oxfordsolver.deyvisml.com/api/verify-activity",
     {
       method: "post",
       headers: {
@@ -216,7 +216,7 @@ const register_code = async (code) => {
   const token = result.token;
 
   const response = await fetch(
-    "https://oxfordsolver.codigosoxford/api/register_code",
+    "https://oxfordsolver.deyvisml.com/api/register_code",
     {
       method: "post",
       headers: {
@@ -240,7 +240,7 @@ const register_code = async (code) => {
 };
 
 const login = async (credentials) => {
-  const response = await fetch("https://oxfordsolver.codigosoxford/api/login", {
+  const response = await fetch("https://oxfordsolver.deyvisml.com/api/login", {
     method: "post",
     headers: {
       Accept: "application/json",
@@ -277,7 +277,7 @@ const register = async (credentials) => {
   console.log("REGISTERING USER");
 
   const response = await fetch(
-    "https://oxfordsolver.codigosoxford/api/new_register",
+    "https://oxfordsolver.deyvisml.com/api/new_register",
     {
       method: "post",
       headers: {
@@ -310,7 +310,7 @@ const get_user_profile = async () => {
   const token = result.token;
 
   const response = await fetch(
-    "https://oxfordsolver.codigosoxford/api/user-profile/",
+    "https://oxfordsolver.deyvisml.com/api/user-profile/",
     {
       method: "get",
       headers: {
@@ -334,7 +334,7 @@ const get_status_token = async () => {
 
   if (token !== "null") {
     const response = await fetch(
-      "https://oxfordsolver.codigosoxford/api/status-token/",
+      "https://oxfordsolver.deyvisml.com/api/status-token/",
       {
         method: "get",
         headers: {
@@ -366,7 +366,7 @@ const get_status_code = async () => {
 
   if (token !== "null") {
     const response = await fetch(
-      "https://oxfordsolver.codigosoxford/api/status-code/",
+      "https://oxfordsolver.deyvisml.com/api/status-code/",
       {
         method: "get",
         headers: {

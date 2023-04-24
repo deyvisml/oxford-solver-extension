@@ -24,7 +24,7 @@
       ]
     }
   ],
-  "host_permissions": ["https://deyvisml.com/oxford-solver/api/*"],
+  "host_permissions": ["https://oxfordsolver.deyvisml.com/api/*"],
   "background": {
     "service_worker": "service-worker.js"
   },
