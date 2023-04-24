@@ -4,11 +4,10 @@
 }
 
 .interface {
-  top: 0;
-  bottom: 0;
-  margin: auto;
   position: fixed;
-  right: 0;
+  top: 50%; /* position the top  edge of the element at the middle of the parent */
+  right: 0%; /* position the left edge of the element at the middle of the parent */
+  transform: translate(0%, -50%);
 
   display: flex;
   flex-direction: row;
@@ -22,6 +21,8 @@
 
   list-style: none;
   background-color: #222222;
+  border: 1px solid white;
+  border-right: none;
   border-radius: 20px 0px 0px 20px;
   display: flex;
   flex-direction: column;
@@ -34,11 +35,12 @@
 }
 
 .options-container li {
+  box-sizing: content-box;
   color: #e9e9e9;
   font-size: 20px;
-  width: 30px;
-  height: 30px;
-  padding: 5px;
+  width: 30px !important;
+  height: 30px !important;
+  padding: 5px !important;
   cursor: pointer;
 
   display: flex;
@@ -97,9 +99,10 @@
 }
 
 .float-window .head-float-window {
+  box-sizing: content-box;
   margin: 1px;
-  height: 25px;
   padding: 1px;
+  height: 25px;
   border-bottom: 1px solid gainsboro;
 
   display: flex;
@@ -110,6 +113,7 @@
 .float-window .head-float-window .close-float-window {
   width: 24px;
   height: 24px;
+  padding: 0px !important;
   margin: 0px 7px !important;
   cursor: pointer;
   border: 1px solid transparent;
@@ -131,7 +135,7 @@
 
 .float-window .body-float-window .title-window {
   font-size: 25px;
-  margin: 5px 0px 10px;
+  margin: 5px 0px 10px !important;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   color: white;
 }
@@ -141,21 +145,25 @@
   padding-top: 3px;
   padding-bottom: 15px;
   font-size: 15px;
+  margin: 0px !important;
 }
 
 .float-window .body-float-window .center-input-button {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0px !important;
 }
 
 .float-window .body-float-window .center-input-button .input-code {
   display: block;
-  width: 135px;
-  height: 30px;
-  font-size: 25px;
-  border-radius: 5px;
-  padding: 8px 10px;
+  margin: 0px !important;
+  box-sizing: border-box;
+  width: 160px !important;
+  height: 50px !important;
+  font-size: 25px !important;
+  border-radius: 5px !important;
+  padding: 8px 10px !important;
   letter-spacing: 3px;
   outline: none;
   font-weight: 600;
@@ -166,22 +174,19 @@
 .float-window .body-float-window .close-session-btn {
   background-color: #b45163;
   color: white;
-  padding: 10px 15px;
+  font-size: 13px;
+  padding: 10px 15px !important;
   margin-top: 12px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: bold !important;
 }
 
 .float-window .body-float-window .center-input-button .btn-register-code:hover,
 .float-window .body-float-window .close-session-btn:hover {
   background-color: #c77080;
   transition: background-color 0.5s;
-}
-
-html {
-  height: 100%;
 }
 
 .cover-window {
@@ -216,7 +221,7 @@ html {
   border-radius: 4px;
   font-size: 14px;
   padding: 2px 5px 1px;
-  margin-top: 9px;
+  margin-top: 11px;
   animation: fadein 1.5s;
 }
 

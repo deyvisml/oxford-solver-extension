@@ -50,12 +50,15 @@ const display_user_interface = () => {
 
   const buy_code_btn = document.querySelector(".buy-code-btn");
   buy_code_btn.addEventListener("click", () => {
-    const url = "https://wa.me/message/HRSSF2L4HUIEA1";
+    const url = "https://wa.link/c402hd";
     window.open(url, "_blank").focus();
   });
 };
 
 const display_key_btn = async () => {
+  // Elminar el boton existente actual (solo si existe)
+  document.querySelector(".btn-key-container")?.remove();
+
   const response = await verify_activity();
 
   if (response.activity_available === true) {
@@ -270,7 +273,7 @@ const create_body_float_window = (questions, format_type) => {
 const verify_activity = async () => {
   // TODO: Estas rutas xpath son muy IMPORTANTES ya que definen con exactitud de que activity se trata. (puede que varien en las distintas actitivy ...)
 
-  /*const path_program =
+  const path_program =
     "/html/body/header/nav/d2l-navigation/d2l-navigation-main-header/div[1]/div[2]/div/a";
   const path_topic =
     "/html/body/div[3]/div[2]/div[1]/div/div[1]/div/div/d2l-breadcrumbs/d2l-breadcrumb[3]";
@@ -283,15 +286,16 @@ const verify_activity = async () => {
 
   const program_name = program_element.getAttribute("title");
   const topic_name = topic_element.getAttribute("text");
-  const activity_type_name = activity_type_element.getAttribute("text");*/
+  const activity_type_name = activity_type_element.getAttribute("text");
 
+  /*
   const program_element = await checkElement('//*[@id="program"]');
   const topic_element = await checkElement('//*[@id="topic"]');
   const activity_type_element = await checkElement('//*[@id="activity-type"]');
 
   const program_name = program_element.value;
   const topic_name = topic_element.value;
-  const activity_type_name = activity_type_element.value;
+  const activity_type_name = activity_type_element.value;*/
 
   // verificar en el backend
   // https://stackoverflow.com/questions/52087734/make-promise-wait-for-a-chrome-runtime-sendmessage
@@ -310,11 +314,41 @@ const verify_activity = async () => {
   return response;
 };
 
+/* ====================================================================== */
+/* === METODOS AUXILIARES === */
+
+const getElementByXpath = (path) => {
+  return document.evaluate(
+    path,
+    document,
+    null,
+    XPathResult.FIRST_ORDERED_NODE_TYPE,
+    null
+  ).singleNodeValue;
+};
+
+const checkElement = async (selector) => {
+  console.log("SEARCHING ELEMENT");
+  while (getElementByXpath(selector) === null) {
+    console.log("PIPIPI");
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+  return getElementByXpath(selector);
+};
+
+const isNumeric = (value) => {
+  return /^\d+$/.test(value);
+};
+
 /* =================================== */
 /**
  * Metodo a ejecutar por defecto, para mostrar la interfaz correspondiente
  */
 const main = () => {
+  getElementByXpath(
+    `//*[@id="__8x8-chat-button-container-script_15047778015c77c13fd4b099.78966852"]`
+  )?.remove(); // delete float div "livechat"
+
   chrome.runtime.sendMessage(
     { action: "get-status-token" },
     function (response) {
@@ -477,6 +511,8 @@ const handler_login_btn = () => {
   chrome.runtime.sendMessage({ action: "login" }, function (response) {
     if (response.logged) {
       main();
+    } else {
+      console.log("-> El usuario no se logeo");
     }
     // eliminar el loader de login
     document.querySelector(".login-btn").style.removeProperty("display");
@@ -586,30 +622,4 @@ const handler_close_float_window_answers = () => {
   );
 
   float_window_answers_element?.remove();
-};
-
-/* ====================================================================== */
-/* === METODOS AUXILIARES === */
-
-const getElementByXpath = (path) => {
-  return document.evaluate(
-    path,
-    document,
-    null,
-    XPathResult.FIRST_ORDERED_NODE_TYPE,
-    null
-  ).singleNodeValue;
-};
-
-const checkElement = async (selector) => {
-  console.log("SEARCHING ELEMENT");
-  while (getElementByXpath(selector) === null) {
-    console.log("PIPIPI");
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-  }
-  return getElementByXpath(selector);
-};
-
-const isNumeric = (value) => {
-  return /^\d+$/.test(value);
 };

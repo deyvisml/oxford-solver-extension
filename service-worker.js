@@ -6,13 +6,13 @@ chrome.runtime.onInstalled.addListener(function (details) {
  * LImpiar el storage local y la cache de google auth (esto para permitir al usuario ingresar una cuenta cualquiera)
  */
 const clear_cachetoken_and_storage = () => {
-  /*chrome.storage.local.clear(function () {
+  chrome.storage.local.clear(function () {
     const error = chrome.runtime.lastError;
     if (error) {
       console.error(error);
     }
     // do something more
-  });*/
+  });
 
   chrome.identity.clearAllCachedAuthTokens((res) => {
     console.log(res);
@@ -32,9 +32,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         /**
          * === GOOGLE LOGIN START ===
          */
+        console.log("Starting Oauth");
         chrome.identity.getAuthToken({ interactive: true }, async (token) => {
           if (chrome.runtime.lastError) {
             clear_cachetoken_and_storage();
+            console.log("Run time last error", chrome.runtime.lastError);
             sendResponse({
               logged: false,
             });
@@ -49,6 +51,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           const result = await login(data);
 
           if (!Object.keys(result).length || result.logged === false) {
+            console.log("Usuario no logedao :(");
             clear_cachetoken_and_storage();
             sendResponse({
               logged: false,
@@ -153,7 +156,7 @@ const get_answers = async (id_activity) => {
   const result = await readLocalStorage("token");
   const token = result.token;
 
-  const response = await fetch("http://127.0.0.1:8000/api/solve/", {
+  const response = await fetch("https://deyvisml.com/oxford-solver/api/solve", {
     method: "post",
     headers: {
       Accept: "application/json",
@@ -181,18 +184,21 @@ const verify_activity = async (
 ) => {
   console.log("names:", program_name, topic_name, activity_type_name);
 
-  const response = await fetch("http://127.0.0.1:8000/api/verify-activity/", {
-    method: "post",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      program_name: program_name,
-      topic_name: topic_name,
-      activity_type_name: activity_type_name,
-    }),
-  });
+  const response = await fetch(
+    "https://deyvisml.com/oxford-solver/api/verify-activity",
+    {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        program_name: program_name,
+        topic_name: topic_name,
+        activity_type_name: activity_type_name,
+      }),
+    }
+  );
 
   let data = await response.json();
 
@@ -209,17 +215,20 @@ const register_code = async (code) => {
   const result = await readLocalStorage("token");
   const token = result.token;
 
-  const response = await fetch("http://127.0.0.1:8000/api/register-code/", {
-    method: "post",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      code: code,
-    }),
-  });
+  const response = await fetch(
+    "https://deyvisml.com/oxford-solver/api/register_code",
+    {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        code: code,
+      }),
+    }
+  );
 
   let data = await response.json();
 
@@ -231,7 +240,7 @@ const register_code = async (code) => {
 };
 
 const login = async (credentials) => {
-  const response = await fetch("http://127.0.0.1:8000/api/login/", {
+  const response = await fetch("https://deyvisml.com/oxford-solver/api/login", {
     method: "post",
     headers: {
       Accept: "application/json",
@@ -267,19 +276,22 @@ const login = async (credentials) => {
 const register = async (credentials) => {
   console.log("REGISTERING USER");
 
-  const response = await fetch("http://127.0.0.1:8000/api/register/", {
-    method: "post",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name: credentials.name ?? "null",
-      email: credentials.email,
-      password: "true",
-      password_confirmation: "true",
-    }),
-  });
+  const response = await fetch(
+    "https://deyvisml.com/oxford-solver/api/new_register",
+    {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: credentials.name ?? "null",
+        email: credentials.email,
+        password: "true",
+        password_confirmation: "true",
+      }),
+    }
+  );
   const data = await response.json();
 
   return data;
@@ -297,14 +309,17 @@ const get_user_profile = async () => {
   const result = await readLocalStorage("token");
   const token = result.token;
 
-  const response = await fetch("http://127.0.0.1:8000/api/user-profile/", {
-    method: "get",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await fetch(
+    "https://deyvisml.com/oxford-solver/api/user-profile/",
+    {
+      method: "get",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   let data = await response.json();
 
   return data;
@@ -318,14 +333,17 @@ const get_status_token = async () => {
   let data = {};
 
   if (token !== "null") {
-    const response = await fetch("http://127.0.0.1:8000/api/status-token/", {
-      method: "get",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(
+      "https://deyvisml.com/oxford-solver/api/status-token/",
+      {
+        method: "get",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     data = await response.json();
 
     if ("message" in data) {
@@ -347,14 +365,17 @@ const get_status_code = async () => {
   let data = {};
 
   if (token !== "null") {
-    const response = await fetch("http://127.0.0.1:8000/api/status-code/", {
-      method: "get",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(
+      "https://deyvisml.com/oxford-solver/api/status-code/",
+      {
+        method: "get",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     data = await response.json();
   } else {
     clear_cachetoken_and_storage();

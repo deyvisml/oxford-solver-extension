@@ -16,7 +16,7 @@
   border-radius: 7px;
   border: 1px solid black;
   overflow: hidden;
-  box-shadow: 3px 3px 4px 1px #222222;
+  box-shadow: 3px 3px 4px 2px #222222;
   user-select: none !important;
 
   width: 250px; /*small: 200, medium: 350: large: 500*/
@@ -42,7 +42,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #5e8b7e;
+  /*background-color: #5e8b7e;*/
+  background-color: #b45163;
   cursor: move;
   color: white;
 }
